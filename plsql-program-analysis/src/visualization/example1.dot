@@ -1,0 +1,29 @@
+digraph G {
+	"1:[CREATE OR REPLACE PROCEDURE vulnerable(pname IN VARCHAR2, vresult OUT VARCHAR2) AS, vsql VARCHAR2(4000);, test NUMBER(100);, vname VARCHAR2(1000);]";
+	"2:[BEGIN]";
+	"3:[test := 20;]";
+	"4:[IF (test > 50) THEN]";
+	"5:[vname := 'John';]";
+	"6:[ELSIF (test > 30) THEN]";
+	"7:[vname := 'Christina';]";
+	"8:[ELSE]";
+	"9:[vname := pname;]";
+	"10:[END IF;]";
+	"11:[vsql := 'SELECT description FROM products WHERE name=sys.DBMS_ASSERT.ENQUOTE_LITERAL(''' || vname || ''')';]";
+	"12:[EXECUTE IMMEDIATE vsql INTO vresult;]";
+	"13:[END;]";
+	"1:[CREATE OR REPLACE PROCEDURE vulnerable(pname IN VARCHAR2, vresult OUT VARCHAR2) AS, vsql VARCHAR2(4000);, test NUMBER(100);, vname VARCHAR2(1000);]" -> "2:[BEGIN]";
+	"2:[BEGIN]" -> "3:[test := 20;]";
+	"3:[test := 20;]" -> "4:[IF (test > 50) THEN]";
+	"4:[IF (test > 50) THEN]" -> "5:[vname := 'John';]";
+	"4:[IF (test > 50) THEN]" -> "6:[ELSIF (test > 30) THEN]";
+	"5:[vname := 'John';]" -> "10:[END IF;]";
+	"6:[ELSIF (test > 30) THEN]" -> "7:[vname := 'Christina';]";
+	"6:[ELSIF (test > 30) THEN]" -> "8:[ELSE]";
+	"7:[vname := 'Christina';]" -> "10:[END IF;]";
+	"8:[ELSE]" -> "9:[vname := pname;]";
+	"9:[vname := pname;]" -> "10:[END IF;]";
+	"10:[END IF;]" -> "11:[vsql := 'SELECT description FROM products WHERE name=sys.DBMS_ASSERT.ENQUOTE_LITERAL(''' || vname || ''')';]";
+	"11:[vsql := 'SELECT description FROM products WHERE name=sys.DBMS_ASSERT.ENQUOTE_LITERAL(''' || vname || ''')';]" -> "12:[EXECUTE IMMEDIATE vsql INTO vresult;]";
+	"12:[EXECUTE IMMEDIATE vsql INTO vresult;]" -> "13:[END;]";
+}

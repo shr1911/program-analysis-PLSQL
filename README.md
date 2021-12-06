@@ -34,7 +34,7 @@ Following are the steps to run the project and produce results for any project.
 - IDE like Intellij or Eclipse
 - For dependency management Maven needs to be there (apache-maven-3.8.3 used)
 
-### 2. Run the tainanalyzer for various input code
+### 2. Run the taint analyzer for various input code
        
 From the above code structure resource folder contains various types examples for PL/SQL stored procedure which has be to ran one after the other to reproduce the evaluations and results.
        

@@ -30,7 +30,7 @@ This file contains
 Following are the steps to run the project and produce results for any project.
 
 ### 1. Pre-requisite setup to run the code
-- The machine needs java 8 to be installed in the machine where the code is ran
+- java 8 to be installed in the machine where the code is ran
 - IDE like Intellij or Eclipse
 - For dependency management Maven needs to be there (apache-maven-3.8.3 used)
 

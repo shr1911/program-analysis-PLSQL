@@ -27,12 +27,12 @@ This file contains
 
 
 ## Execution Instructions to reproduce the result
-    Following are the steps to run the project and produce results for any project.
+Following are the steps to run the project and produce results for any project.
 
 ### 1. Pre-requisite setup to run the code
-       - The machine needs java 8 to be installed in the machine where the code is ran
-       - IDE like Intellij or Eclipse
-       - For dependency management Maven needs to be there (apache-maven-3.8.3 used)
+- The machine needs java 8 to be installed in the machine where the code is ran
+- IDE like Intellij or Eclipse
+- For dependency management Maven needs to be there (apache-maven-3.8.3 used)
 
 ### 2. Run the tainanalyzer for various input code
        
@@ -60,6 +60,10 @@ In order to run each example follow below steps -
 
 
 ## Acknowledgment and Resources
-
-
+1. Consulted with Professor and TA to discuss the project idea, motivation and methodology planned
+2. Discussed about the real-time problem with my previous colleague at JPMorgan to get more insight of the problem
+3. SonarSource Tool
+4. PMD Analzer
+5. SQL Enlight tool
+6. PL/SQL Advisor
 

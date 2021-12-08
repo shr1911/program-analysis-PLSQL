@@ -6,11 +6,10 @@ import java.util.Stack;
 
 import static com.demo.plsqlprogramanalysis.cfg.Constants.*;
 
+/*
+ * This class is to construct CFG depending on the type of each statement. (Using Sonarsource and PMD)
+ * */
 public class CFG {
-    // Depending on the type of each statement construct graph core logic to construct the graph
-    //Need to understand this
-    // https://github.com/atiqahammed/Control-Flow-Graph/blob/master/src/statementAnalyzer/Analyser.java
-
     StatementChecker statementChecker = new StatementChecker();
 
 
@@ -26,10 +25,8 @@ public class CFG {
 
 
 
-
         int i=0;
         while(i < lineList.size()){
-            //System.out.println("---------");
 
             //for first node i.e. Create or replace node
             if(statementChecker.checkStatementType(lineList.get(i)) == CREATE_OR_REPLACE_STATEMENT){
@@ -56,7 +53,6 @@ public class CFG {
 
             }
 
-            //System.out.println("---------");
             //handling begin statement
             if(statementChecker.checkStatementType(lineList.get(i)) == BEGIN_STATEMENT){
                 ArrayList<String> beginStatement = new ArrayList<>();
@@ -142,8 +138,16 @@ public class CFG {
                 elsifStatement.add(lineList.get(i));
                 System.out.println("elsifStatement node will be..."+lineList.get(i));
                 System.out.println("creating node for ELSIF_STATEMENT...");
-                while(nodeStack.peek().statementType != IF_STATEMENT){
-                    nodeStack.pop();
+
+                String check_parent = nodeStack.peek().statementType;
+                if(check_parent.equals(IF_STATEMENT)){
+                    while(nodeStack.peek().statementType != IF_STATEMENT){
+                        nodeStack.pop();
+                    }
+                }else if(check_parent.equals(ELSIF_STATEMENT)){
+                    while (nodeStack.peek().statementType != ELSIF_STATEMENT) {
+                        nodeStack.pop();
+                    }
                 }
                 Node parentNode = nodeStack.pop();
                 Node elsifNode = new Node();
@@ -259,7 +263,6 @@ public class CFG {
 
             i++;
         }
-
         return graph;
     }
 

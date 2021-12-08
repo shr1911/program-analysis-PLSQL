@@ -5,7 +5,6 @@ import java.util.ArrayList;
 public class Node {
     //This class is the type of each node in CFG
     //ArrayList<String> statements -> will contain list of statements that belongs to the statement type
-     //  which we have defined
 
     int nodeNumber;
     ArrayList<Integer> childList = new ArrayList<>();

@@ -1,0 +1,12 @@
+CREATE OR REPLACE PROCEDURE get_tab_row_count(p_table_name IN VARCHAR2) AS
+  l_sql     VARCHAR2(32767);
+  l_count   NUMBER;
+BEGIN
+  l_sql := 'SELECT COUNT(*) INTO :l_count FROM ' ||
+            sys.DBMS_ASSERT.SQL_OBJECT_NAME(p_table_name);
+
+  EXECUTE IMMEDIATE l_sql INTO l_count;
+
+  DBMS_OUTPUT.put_line('l_count = ' || l_count);
+END;
+/

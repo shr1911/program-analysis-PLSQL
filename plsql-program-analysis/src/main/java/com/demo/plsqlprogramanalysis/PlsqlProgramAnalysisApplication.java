@@ -16,15 +16,17 @@ import java.util.*;
 @SpringBootApplication
 public class PlsqlProgramAnalysisApplication {
 
+	//The main function to start the applocation
 	public static void main(String[] args) {
 		SpringApplication.run(PlsqlProgramAnalysisApplication.class, args);
 
 		System.out.println("\n\nString Control Flow Graph Creation of PL/SQL block... ");
-
 		long startCFGTime = System.currentTimeMillis();
+
 		//Reading input file to be analyzed
 		InputCodeReader inputCodeReader = new InputCodeReader();
 		ArrayList<String> lineList = inputCodeReader.inputFileRead();
+
 
 		//Creating CFG of the given code
 		CFG cfg = new CFG();
@@ -33,6 +35,8 @@ public class PlsqlProgramAnalysisApplication {
 		long timeElapsedCFG = endCFGTime - startCFGTime;
 		System.out.println("\nTotal time taken for CFG creation is (in MilliSeconds): " + timeElapsedCFG);
 
+
+		//Following block prints the control flow graph in the logs
 		System.out.println("\n++++++++++++++++++++++++Printing Graph START++++++++++++++++++++++++\n");
 		System.out.println("Displaying Control Flow Graph... ");
 		for(Map.Entry<Integer, Node> entry : cfgList.entrySet()) {
@@ -41,38 +45,10 @@ public class PlsqlProgramAnalysisApplication {
 			value.printChild();
 			System.out.println("-----");
 		}
-
 		System.out.println("++++++++++++++++++++++++Printing Graph END++++++++++++++++++++++++\n");
 
-		System.out.println("Starting to find taints using CFG....");
-		long startTaintTime = System.currentTimeMillis();
-		TaintChecker cfgParser = new TaintChecker();
-		ArrayList<Taint> taints = cfgParser.parseGraph(cfgList);
-		long endTaintTime = System.currentTimeMillis();
-		long timeElapsedTaint = endTaintTime - startTaintTime;
-		System.out.println("\nTotal time taken for Taint Detection (in MilliSeconds): " + timeElapsedTaint);
 
-
-		System.out.println("\n++++++++++++++++++++++++START Printing Total Taints++++++++++++++++++++++++\n");
-
-		for (Taint taint:taints) {
-			System.out.println("SOURCE : " + taint.getSourceMethod().getStatements());
-			System.out.println("SINK : " + taint.getSinkMethod().getStatements());
-		}
-
-		System.out.println("\n++++++++++++++++++++++++END Printing Total Taints++++++++++++++++++++++++\n\n\n");
-
-		System.out.println("++++++++++++++++++++++++TIME COMPLEXITY - START ++++++++++++++++++++++++\n");
-		System.out.println("Total time taken for CFG creation is (in MilliSeconds): " + timeElapsedCFG);
-		System.out.println("Total time taken for Taint Detection (in MilliSeconds): " + timeElapsedTaint);
-		System.out.println("\nOverall time taken (in MilliSeconds): " + (timeElapsedCFG + timeElapsedTaint));
-
-
-
-		System.out.println("\n++++++++++++++++++++++++TIME COMPLEXITY - END ++++++++++++++++++++++++\n\n\n");
-
-
-		//Performing Visualization
+		//Performing graph into .dot file format for performing visualization
 		System.out.println("Start creating visualization for java CFG... ");
 		try {
 			FileWriter myWriter = new FileWriter("example2.dot");
@@ -99,6 +75,32 @@ public class PlsqlProgramAnalysisApplication {
 			e.printStackTrace();
 		}
 
+
+		//This part contains the phase 2 , which is taint analyser
+		System.out.println("Starting to find taints using CFG....");
+		long startTaintTime = System.currentTimeMillis();
+		TaintChecker cfgParser = new TaintChecker();
+		ArrayList<Taint> taints = cfgParser.parseGraph(cfgList);
+		long endTaintTime = System.currentTimeMillis();
+		long timeElapsedTaint = endTaintTime - startTaintTime;
+		System.out.println("\nTotal time taken for Taint Detection (in MilliSeconds): " + timeElapsedTaint);
+
+		System.out.println("\n++++++++++++++++++++++++START Printing Total Taints++++++++++++++++++++++++\n");
+		for (Taint taint:taints) {
+			System.out.println("SOURCE : " + taint.getSourceMethod().getStatements());
+			System.out.println("SINK : " + taint.getSinkMethod().getStatements());
+			System.out.println("\n");
+		}
+		System.out.println("\n++++++++++++++++++++++++END Printing Total Taints++++++++++++++++++++++++\n\n\n");
+
+
+
+		//printing out total time taken overall.
+		System.out.println("++++++++++++++++++++++++TIME COMPLEXITY - START ++++++++++++++++++++++++\n");
+		System.out.println("Total time taken for CFG creation is (in MilliSeconds): " + timeElapsedCFG);
+		System.out.println("Total time taken for Taint Detection (in MilliSeconds): " + timeElapsedTaint);
+		System.out.println("\nOverall time taken (in MilliSeconds): " + (timeElapsedCFG + timeElapsedTaint));
+		System.out.println("\n++++++++++++++++++++++++TIME COMPLEXITY - END ++++++++++++++++++++++++\n\n\n");
 
 	}
 

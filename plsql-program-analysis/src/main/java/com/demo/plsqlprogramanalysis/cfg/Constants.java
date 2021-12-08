@@ -1,7 +1,10 @@
 package com.demo.plsqlprogramanalysis.cfg;
 
+/*
+* This class contains all constant values for type of statements.
+* */
 public class Constants {
-    //It will contain all constant values like type of sentence
+
     public static final String CREATE_OR_REPLACE_STATEMENT = "CREATE_OR_REPLACE_STATEMENT";
     public static final String BEGIN_STATEMENT = "BEGIN_STATEMENT";
     public static final String ASSIGNMENT_STATEMENT = "ASSIGNMENT_STATEMENT";

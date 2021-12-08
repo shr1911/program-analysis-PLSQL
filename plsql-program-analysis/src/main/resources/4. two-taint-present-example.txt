@@ -1,0 +1,19 @@
+CREATE OR REPLACE PROCEDURE get_open_data(p_code IN VARCHAR2, pname IN VARCHAR2, vresult OUT VARCHAR2) AS
+  l_sql     VARCHAR2(32767);
+  c_cursor  SYS_REFCURSOR;
+  l_buffer  VARCHAR2(32767);
+BEGIN
+    l_sql := 'SELECT description FROM open_tab WHERE code =''' || p_code || '''';
+    test := 20;
+  	IF (test > 50) THEN
+  	    vname := 'John';
+  	ELSIF (test > 30) THEN
+  		vname := 'Christina';
+  	ELSE
+  		vname := pname;
+  	END IF;
+    vsql := 'SELECT description FROM products WHERE name=''' || vname || '''';
+    EXECUTE IMMEDIATE vsql INTO vresult;
+    EXECUTE IMMEDIATE l_sql;
+END;
+/

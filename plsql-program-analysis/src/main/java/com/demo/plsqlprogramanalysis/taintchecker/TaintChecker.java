@@ -6,34 +6,41 @@ import com.demo.plsqlprogramanalysis.cfg.StatementChecker;
 
 import java.util.*;
 
+/*
+ * This class to apply work-list algorithm on CFG to do taint analysis
+ * */
 public class TaintChecker {
     public static final String DBMS_ASSERT = "sys.DBMS_ASSERT";
 
-
-
-
     public ArrayList<Taint> parseGraph(HashMap<Integer, Node> cfgList) {
-        //System.out.println("Inside parseGraph... ");
-        //pair of taint surce and sink
+        System.out.println("Inside parseGraph... ");
+
+        //To track final result to return the total number of taint present.
         ArrayList<Taint> resultTaints = new ArrayList<>();
+
+        //For graph traversal purpose
         ArrayList<Integer> visitedNode = new ArrayList<Integer>();
 
         //contains list of tainted node and tainted variables in that node
         HashMap<Node, List<String>> taintedVariables = new HashMap<>();
+
+        //To keep track of all parents of tainted node
         HashMap<Node, Node> listOfParentTaint = new HashMap<>();
         
         StatementChecker statementChecker = new StatementChecker();
 
+        //Adding all inputs arguments to the list of taint
         Node functionDefinitionNode = cfgList.get(1);
         findTaintedArguments(functionDefinitionNode, taintedVariables);
 
         //just for validating
-        for(Map.Entry<Node, List<String>> entry : taintedVariables.entrySet()) {
-            Node key = entry.getKey();
-            List<String> value = entry.getValue();
-            //System.out.println("Key is : "+key.getNodeNumber());
-            //System.out.println("Value is : " + Arrays.toString(value.toArray()) .replaceAll("[\\[\\]]", ""));
-        }
+//        for(Map.Entry<Node, List<String>> entry : taintedVariables.entrySet()) {
+//            Node key = entry.getKey();
+//            List<String> value = entry.getValue();
+//            System.out.println("Key is : "+key.getNodeNumber());
+//            System.out.println("Value is : " + Arrays.toString(value.toArray()) .replaceAll("[\\[\\]]", ""));
+//        }
+
 
         //visiting each node in adjacency list
         for(int i=1; i< cfgList.size(); i++){
@@ -43,7 +50,7 @@ public class TaintChecker {
             ArrayList<Integer> currentNodeChild = currentNode.getChildList();
             //visiting each child for this node
             for(int j = 0; j < currentNodeChild.size(); j++) {
-                //System.out.println(currentNodeChild.get(j)+ "   ");
+                System.out.println(currentNodeChild.get(j)+ "   ");
                 nodeToVisit = currentNodeChild.get(j);
                 if(!visitedNode.contains(nodeToVisit)){
                     //System.out.println("visiting node number " + nodeToVisit);
@@ -51,13 +58,16 @@ public class TaintChecker {
                     //for all statements in this node to be visited
                     for (String temp : cfgList.get(nodeToVisit).getStatements()) {
 
+
                         // if assignment statement and not sanitized add if any new taint introduced
                         if(statementChecker.checkStatementType(temp).equals(Constants.ASSIGNMENT_STATEMENT)) {
                             //System.out.println("Checking if assignment statement ?");
                             String[] result = temp.split(":=");
                             //System.out.println("RHS of assignment statement is : " + result[1]);
+
                             if(checkIfStringContainsTaint(result[1], taintedVariables)
                                     && !isSanitized(result[1])){
+
                                 if(!taintedVariables.containsKey(nodeToVisit)){
                                     //System.out.println("Adding the new taint propogation");
                                     ArrayList<String> tempList = new ArrayList<>();
@@ -94,16 +104,15 @@ public class TaintChecker {
                             for(Map.Entry<Node, List<String>> entry : taintedVariables.entrySet()) {
                                 Node key = entry.getKey();
                                 List<String> values = entry.getValue();
-                                //System.out.println("Key is : "+key.getNodeNumber());
-                                //System.out.println("Value is : " + Arrays.toString(values.toArray()) .replaceAll("[\\[\\]]", ""));
 
                                 for (String value :values) {
-                                    if(temp.contains(value) ){
-                                        //System.out.println("true: there is one taint");
+                                    if(temp.contains(value.trim())){
+                                        System.out.println("true: there is one taint");
                                         Taint taint = new Taint();
 
                                         Node source = key;
-                                        //finding topmost parent
+
+                                        //finding topmost parent, that will be my source
                                         while(listOfParentTaint.containsKey(source)){
                                             source = listOfParentTaint.get(source);
                                         }
@@ -112,7 +121,6 @@ public class TaintChecker {
                                         //System.out.println("source: " + source.getStatements());
                                         taint.setSinkMethod(cfgList.get(nodeToVisit));
                                         //System.out.println("sink: " + cfgList.get(nodeToVisit).getStatements());
-
                                         resultTaints.add(taint);
 
                                     }
@@ -131,6 +139,9 @@ public class TaintChecker {
         return resultTaints;
     }
 
+    /*
+     * This function validates as we visit each statement if they contain taint or not
+     * */
     private boolean checkIfStringContainsTaint(String s, HashMap<Node, List<String>> taintedVariables) {
         //System.out.println("checking checkIfStringContainsTaint for this assignment statement");
         boolean taintFlag = false;
@@ -140,10 +151,9 @@ public class TaintChecker {
             List<String> value = entry.getValue();
             // System.out.println("Key is : "+key.getNodeNumber());
             //System.out.println("Value is : " + Arrays.toString(value.toArray()) .replaceAll("[\\[\\]]", ""));
-
             for (String temp :value) {
                 if(s.contains(temp)){
-                    //System.out.println("true");
+                    System.out.println("true");
                     taintFlag = true;
                 }
             }
@@ -151,6 +161,9 @@ public class TaintChecker {
         return taintFlag;
     }
 
+    /*
+    * This function is to check the initial arguments which is considered tainted
+    * */
     private void findTaintedArguments(Node functionDefinitionNode, HashMap<Node, List<String>> taintedVariables) {
         //System.out.println("Starting findTaintedArguments method... ");
         String createStatement = functionDefinitionNode.getStatements().get(0);
@@ -167,11 +180,12 @@ public class TaintChecker {
         };
         taintedVariables.put(functionDefinitionNode, nodeTaintedVariables);
 
-
-
     }
 
 
+    /*
+    * This function checked if statement is sanitized or not
+    * */
     private boolean isSanitized(String statement) {
         StatementChecker statementChecker = new StatementChecker();
         //System.out.println("isSanitized:: " + statementChecker.isMatch("^.*DBMS_ASSERT.*$", statement));

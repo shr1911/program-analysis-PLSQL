@@ -4,8 +4,11 @@ import java.util.regex.Pattern;
 
 import static com.demo.plsqlprogramanalysis.cfg.Constants.*;
 
+/*
+* This class contains statement check of each PL/SQ statement by using regular expression pattern matching (using already done work)
+* */
 public class StatementChecker {
-    //There will be multiple functions to check what type of statement it is and it returns a constant value
+
     private Pattern MY_PATTERN;
 
 

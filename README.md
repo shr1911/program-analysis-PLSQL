@@ -18,6 +18,8 @@ This file contains
 ## Summary of Project
 
 ## Structure
+plsql-program-analysis folder :
+
 - `src` 
     - `java`
         - `cfg`: This module contains control-flow-graph creation for PL/SQL stored procedure
@@ -25,6 +27,7 @@ This file contains
     - `resource`: contains the various types of input example that has been given to the source code.
 - `visualization`: This folder contains the control flow graph in .dot file format for visualization on Gephi tool.
 
+report: cotnains final paper
 
 ## Execution Instructions to reproduce the result
 Following are the steps to run the project and produce results for any project.

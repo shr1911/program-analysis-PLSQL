@@ -1,10 +1,5 @@
-# program-analysis-PLSQL-CMPUT-500
-This git repository has been made for maintaining the project work for the course CMPUT 500 - Program Analysis. The code here contains the taint analysis study for the PL/SQL database codebase.
-
-## Student Details
-|Student name| CCID |
-|------------|------|
-|student 1   |  smakwana    |
+# program-analysis-PLSQL
+This git repository has been made for maintaining the project work of Program Analysis. The code here contains the taint analysis study for the PL/SQL database codebase.
 
 
 ## List of items in README
